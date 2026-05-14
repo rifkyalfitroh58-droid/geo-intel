@@ -215,9 +215,9 @@ with st.sidebar:
     )
     col_add, col_n = st.columns([2,1])
     with col_add:
-        add_btn = st.button("⬇ Ambil Data", use_container_width=True)
+        add_btn = st.button("⬇ Ambil Data", width='stretch')
     with col_n:
-        n_art = st.selectbox("", [20,50,100], label_visibility="collapsed")
+        n_art = st.selectbox("Jumlah artikel", [20,50,100], label_visibility="collapsed")
 
     if add_btn:
         if not new_kw.strip():
@@ -241,7 +241,7 @@ with st.sidebar:
         'letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">◈ DEMO DATA</div>',
         unsafe_allow_html=True
     )
-    if st.button("📍 Load Data Demo BNPB", use_container_width=True):
+    if st.button("📍 Load Data Demo BNPB", width='stretch'):
         mid_demo = add_monitor("DEMO — Insiden Indonesia")
         n_demo   = seed_demo_data(mid_demo)
         clear_cache()
@@ -271,13 +271,13 @@ with st.sidebar:
 
         col_del, col_ref = st.columns(2)
         with col_del:
-            if st.button("🗑 Hapus", use_container_width=True):
+            if st.button("🗑 Hapus", width='stretch'):
                 delete_monitor(monitor_id)
                 clear_cache()
                 st.success("Dihapus.")
                 st.rerun()
         with col_ref:
-            if st.button("🔄 Update", use_container_width=True):
+            if st.button("🔄 Update", width='stretch'):
                 if "DEMO" not in monitor_kw:
                     with st.spinner("Mengambil data terbaru..."):
                         n_i, n_l, err = fetch_geo_data(monitor_id, monitor_kw, 50)
@@ -413,7 +413,7 @@ with tab1:
         sev_filter = st.slider("Min Severity", 0, 100, 0)
     with col_f3:
         map_style = st.selectbox(
-            "Style Peta",
+            "Style Peta", 
             ["carto-darkmatter","open-street-map","stamen-terrain"],
             label_visibility="collapsed"
         )
@@ -447,7 +447,7 @@ with tab1:
             subset = df_map[df_map["inc_type"] == inc_type]
             if subset.empty:
                 continue
-            fig_map.add_trace(go.Scattermapbox(
+            fig_map.add_trace(go.Scattermap(
                 lat=subset["lat"], lon=subset["lon"],
                 mode="markers",
                 marker=dict(
@@ -461,7 +461,7 @@ with tab1:
             ))
 
         fig_map.update_layout(
-            mapbox=dict(
+            map=dict(
                 style=map_style,
                 center=dict(lat=-2.5, lon=118.0),
                 zoom=4,
@@ -478,7 +478,7 @@ with tab1:
                 font=dict(color="rgba(255,255,255,0.6)", size=10),
             ),
         )
-        st.plotly_chart(fig_map, use_container_width=True)
+        st.plotly_chart(fig_map, width='stretch')
 
         st.markdown(
             f'<div style="font-family:DM Mono;font-size:.7rem;color:rgba(255,255,255,.3);'
@@ -517,7 +517,7 @@ with tab2:
             title=dict(text="Jumlah Insiden per Provinsi",
                        font=dict(size=12, color="rgba(255,255,255,0.5)"), x=0),
         )
-        st.plotly_chart(fig_prov, use_container_width=True)
+        st.plotly_chart(fig_prov, width='stretch')
 
         # Bubble map provinsi
         st.markdown('<div class="section-title">BUBBLE MAP PROVINSI</div>',
@@ -538,7 +538,7 @@ with tab2:
 
         if prov_coords:
             df_bc = pd.DataFrame(prov_coords)
-            fig_bc = go.Figure(go.Scattermapbox(
+            fig_bc = go.Figure(go.Scattermap(
                 lat=df_bc["lat"], lon=df_bc["lon"],
                 mode="markers+text",
                 marker=dict(
@@ -557,13 +557,13 @@ with tab2:
                 name="Provinsi",
             ))
             fig_bc.update_layout(
-                mapbox=dict(style="carto-darkmatter",
+                map=dict(style="carto-darkmatter",
                             center=dict(lat=-2.5, lon=118.0), zoom=3.5),
                 paper_bgcolor="#0a0d0a",
                 height=480,
                 margin=dict(l=0,r=0,t=0,b=0),
             )
-            st.plotly_chart(fig_bc, use_container_width=True)
+            st.plotly_chart(fig_bc, width='stretch')
 
         # Tabel ringkasan
         st.markdown('<div class="section-title">RINGKASAN PER PROVINSI</div>',
@@ -582,7 +582,7 @@ with tab2:
                 "severity_label":"Level",
                 "tipe_dominan":"Tipe Dominan"
             }).sort_values("Jumlah Insiden", ascending=False),
-            use_container_width=True, hide_index=True,
+            width='stretch', hide_index=True,
         )
 
 
@@ -628,7 +628,7 @@ with tab3:
                 lambda x: INCIDENT_TYPES.get(x,{}).get("label",x)
             )
 
-            fig_hs = go.Figure(go.Scattermapbox(
+            fig_hs = go.Figure(go.Scattermap(
                 lat=df_hs_plot["lat"], lon=df_hs_plot["lon"],
                 mode="markers",
                 marker=dict(
@@ -645,13 +645,13 @@ with tab3:
                 customdata=df_hs_plot[["location","count","avg_sev","label"]].values,
             ))
             fig_hs.update_layout(
-                mapbox=dict(style="carto-darkmatter",
+                map=dict(style="carto-darkmatter",
                             center=dict(lat=-2.5, lon=118.0), zoom=4),
                 paper_bgcolor="#0a0d0a",
                 height=440,
                 margin=dict(l=0,r=0,t=0,b=0),
             )
-            st.plotly_chart(fig_hs, use_container_width=True)
+            st.plotly_chart(fig_hs, width='stretch')
 
     # Insiden terbaru per lokasi
     st.markdown('<div class="section-title">INSIDEN TERBARU</div>', unsafe_allow_html=True)
@@ -719,7 +719,7 @@ with tab4:
                               x=0.5, y=0.5, font_size=13,
                               font_color="#2ECC71", showarrow=False)],
         )
-        st.plotly_chart(fig_pie, use_container_width=True)
+        st.plotly_chart(fig_pie, width='stretch')
 
     with c2:
         # Bar severity distribution
@@ -737,7 +737,7 @@ with tab4:
             title=dict(text="Distribusi Level Severity",
                        font=dict(size=12, color="rgba(255,255,255,0.5)"), x=0),
         )
-        st.plotly_chart(fig_sev, use_container_width=True)
+        st.plotly_chart(fig_sev, width='stretch')
 
     # Timeline insiden
     st.markdown('<div class="section-title">TIMELINE INSIDEN</div>', unsafe_allow_html=True)
@@ -776,7 +776,7 @@ with tab4:
                         font=dict(color="rgba(255,255,255,0.4)", size=10)),
             hovermode="x unified",
         )
-        st.plotly_chart(fig_tl, use_container_width=True)
+        st.plotly_chart(fig_tl, width='stretch')
 
     # Sumber terbanyak
     st.markdown('<div class="section-title">SUMBER BERITA</div>', unsafe_allow_html=True)
@@ -790,7 +790,7 @@ with tab4:
         title=dict(text="Sumber Berita Insiden",
                    font=dict(size=12, color="rgba(255,255,255,0.5)"), x=0),
     )
-    st.plotly_chart(fig_src, use_container_width=True)
+    st.plotly_chart(fig_src, width='stretch')
 
 
 # ══════════════════════════════════════════════════════════════════════════════
